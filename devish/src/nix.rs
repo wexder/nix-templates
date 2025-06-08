@@ -9,7 +9,7 @@ fn nix_binary_path() -> PathBuf {
 }
 
 pub fn nix_eval(expr: &str) -> String {
-    let args = vec!["flake", "show", "--json"];
+    let args = vec!["flake", "show", "--json", "--refresh"];
 
     let output = Command::new(nix_binary_path())
         .args(&args[..])
@@ -28,7 +28,7 @@ pub fn nix_eval(expr: &str) -> String {
 }
 
 pub fn nix_init_template(expr: &str, template: &str) -> Result<()> {
-    let args = vec!["flake", "init", "--template"];
+    let args = vec!["flake", "init", "--refresh", "--template"];
 
     let t = format!("{}#{}", expr.trim_end_matches("#"), template);
 

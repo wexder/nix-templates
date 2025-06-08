@@ -10,6 +10,10 @@
           description = "Development shell for rust";
           path = ./templates/rust;
         };
+        rust-pkg = {
+          description = "Development shell for rust package, with build";
+          path = ./templates/rust-pkg;
+        };
       };
   };
 }

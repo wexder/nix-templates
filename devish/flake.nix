@@ -29,6 +29,10 @@
           };
         in
         {
+          checks = {
+            inherit devish;
+          };
+
           packages.default = devish;
 
           make-shells.default = {

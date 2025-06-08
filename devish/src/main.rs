@@ -56,6 +56,10 @@ fn main() -> Result<()> {
     )
     .unwrap();
 
+    if selected == "" {
+        return Ok(());
+    }
+
     // TODO better logger
     println!("Initializing flake using template \"{}\"", selected);
     nix::nix_init_template(expr.as_str(), selected.as_str())

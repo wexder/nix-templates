@@ -29,7 +29,7 @@ pub fn List<'a>(mut hooks: Hooks, props: &mut ListProps<'a>) -> impl Into<AnyEle
         move |event| match event {
             TerminalEvent::Key(KeyEvent { code, kind, .. }) if kind != KeyEventKind::Release => {
                 match code {
-                    KeyCode::Char('q') => should_exit.set(true),
+                    KeyCode::Esc | KeyCode::Char('q') => should_exit.set(true),
                     KeyCode::Up | KeyCode::Char('k') => {
                         if index.get() > 0 {
                             index.set(index.get() - 1)

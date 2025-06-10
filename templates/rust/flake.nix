@@ -20,8 +20,6 @@
         in
         {
           make-shells.default = {
-            checks = self.checks.${system};
-
             packages = [
               (fenixSys.complete.withComponents [
                 "cargo"

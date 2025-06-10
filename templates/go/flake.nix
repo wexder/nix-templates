@@ -12,8 +12,6 @@
       perSystem = { config, self', inputs', pkgs, system, ... }:
         {
           make-shells.default = {
-            checks = self.checks.${system};
-
             packages = [
               pkgs.go
               pkgs.gopls

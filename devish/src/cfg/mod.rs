@@ -1,6 +1,6 @@
 use std::env;
 
-use anyhow::{Context, Result};
+use anyhow::Context;
 use clap::Parser;
 use serde::{Deserialize, Serialize};
 

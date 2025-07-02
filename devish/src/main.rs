@@ -2,7 +2,7 @@ use anyhow::{Context, Result};
 use iocraft::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 mod cfg;
 mod commands;
@@ -49,6 +49,8 @@ fn main() -> Result<()> {
     let templates: Vec<ui::template_selector::Repo> = args
         .repos
         .iter()
+        .collect::<HashSet<_>>()
+        .into_iter()
         .map(|expr| {
             let templates = match serde_json::from_str::<NixTemplates>(&commands::nix_eval(expr)) {
                 Ok(json) => json.to_templates(),

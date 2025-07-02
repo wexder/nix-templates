@@ -12,13 +12,14 @@ pub fn nix_eval(expr: &str) -> String {
     let args = vec!["flake", "show", "--json", "--refresh"];
 
     let output = Command::new(nix_binary_path())
-        .args(&args[..])
+        .args(&args)
         .arg(expr)
         .output()
         .unwrap();
     if !output.status.success() {
         panic!(
-            "flake show {expr} failed!\n    stdout: {}\n    stderr: {}",
+            "nix {} {expr} failed!\n    stdout: {}\n    stderr: {}",
+            args.join(" "),
             String::from_utf8_lossy(&output.stdout),
             String::from_utf8_lossy(&output.stderr)
         )
@@ -33,7 +34,7 @@ pub fn nix_init_template(expr: &str, template: &str) -> Result<()> {
     let t = format!("{}#{}", expr.trim_end_matches("#"), template);
 
     let output = Command::new(nix_binary_path())
-        .args(&args[..])
+        .args(&args)
         .arg(&t)
         .output()
         .unwrap();
@@ -42,7 +43,24 @@ pub fn nix_init_template(expr: &str, template: &str) -> Result<()> {
         Ok(())
     } else {
         Err(anyhow!(
-            "flake init --template {t} failed!\n    stderr: {}",
+            "nix {} {t} failed!\n    stderr: {}",
+            args.join(" "),
+            String::from_utf8_lossy(&output.stderr)
+        ))
+    }
+}
+
+pub fn init_git() -> Result<()> {
+    let args = vec!["init"];
+
+    let output = Command::new("git").args(&args).output().unwrap();
+
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(anyhow!(
+            "git {} failed!\n    stderr: {}",
+            args.join(""),
             String::from_utf8_lossy(&output.stderr)
         ))
     }

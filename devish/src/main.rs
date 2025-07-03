@@ -81,11 +81,16 @@ fn main() -> Result<()> {
     );
     if !args.dry {
         commands::nix_init_template(selected.expr.as_str(), selected.name.as_str())
-            .context("Failed to init template")?
+            .context("Failed to init template")?;
     }
 
     if args.git && !args.dry {
-        commands::init_git().context("Failed to init git repository")?
+        commands::init_git().context("Failed to init git repository")?;
+    }
+
+    if args.git && !args.dry {
+        commands::git_add().context("Failed to stage git files")?;
+        commands::direnv_allow().context("Failed to allow direnv")?;
     }
 
     Ok(())

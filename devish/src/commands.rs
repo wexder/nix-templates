@@ -65,3 +65,35 @@ pub fn init_git() -> Result<()> {
         ))
     }
 }
+
+pub fn git_add() -> Result<()> {
+    let args = vec!["add", "."];
+
+    let output = Command::new("git").args(&args).output().unwrap();
+
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(anyhow!(
+            "git {} failed!\n    stderr: {}",
+            args.join(""),
+            String::from_utf8_lossy(&output.stderr)
+        ))
+    }
+}
+
+pub fn direnv_allow() -> Result<()> {
+    let args = vec!["allow", "."];
+
+    let output = Command::new("direnv").args(&args).output().unwrap();
+
+    if output.status.success() {
+        Ok(())
+    } else {
+        Err(anyhow!(
+            "direnv {} failed!\n    stderr: {}",
+            args.join(""),
+            String::from_utf8_lossy(&output.stderr)
+        ))
+    }
+}

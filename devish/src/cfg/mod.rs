@@ -15,6 +15,10 @@ pub struct Args {
     #[arg(long)]
     pub git: bool,
 
+    /// Allow direnv in the templated directory
+    #[arg(long)]
+    pub direnv: bool,
+
     /// Just print output, don't run generation
     #[arg(long)]
     pub dry: bool,

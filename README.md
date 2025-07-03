@@ -3,7 +3,8 @@
 My nix templates for dev shells.
 
 ## Devish
-Small rust utility to select the template and init nix flake.
+Small rust utility to select the template and init nix flake for local development.
+![demo](./.vhs/demo.gif)
 
 ### Usage
 Install it via nix flake or use directly via nix run.

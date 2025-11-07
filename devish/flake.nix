@@ -13,17 +13,38 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, systems, make-shell, fenix, crane, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      flake-parts,
+      systems,
+      make-shell,
+      fenix,
+      crane,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ make-shell.flakeModules.default ];
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
 
-      perSystem = { config, self', inputs', pkgs, system, ... }:
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          system,
+          ...
+        }:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           fenixSys = fenix.packages.${system};
-          craneLib = (crane.mkLib pkgs).overrideToolchain
-            fenixSys.minimal.toolchain;
+          craneLib = (crane.mkLib pkgs).overrideToolchain fenixSys.minimal.toolchain;
           devish = craneLib.buildPackage {
             src = ./.;
           };
@@ -33,7 +54,10 @@
             inherit devish;
           };
 
-          packages.default = devish;
+          packages = {
+            default = devish;
+            devish = devish;
+          };
 
           make-shells.default = {
             packages = [
@@ -50,4 +74,3 @@
         };
     };
 }
-

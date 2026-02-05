@@ -9,18 +9,54 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, systems, make-shell, fenix, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      flake-parts,
+      systems,
+      make-shell,
+      fenix,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ make-shell.flakeModules.default ];
-      systems = [ "x86_64-linux" "aarch64-darwin" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-darwin"
+      ];
 
-      perSystem = { config, self', inputs', pkgs, system, ... }:
+      perSystem =
+        {
+          config,
+          self',
+          inputs',
+          pkgs,
+          system,
+          ...
+        }:
         let
           fenixSys = fenix.packages.${system};
+          openssl_pkgs = pkgs.openssl;
         in
         {
           make-shells.default = {
+            env = {
+              PKG_CONFIG_PATH = "${openssl_pkgs.dev}/lib/pkgconfig";
+              LIBCLANG_PATH = "${pkgs.llvmPackages.libclang.lib}/lib";
+              LD_LIBRARY_PATH = pkgs.lib.strings.concatStrings (
+                pkgs.lib.strings.intersperse ":" [
+                  "$LD_LIBRARY_PATH"
+                  "${openssl_pkgs.out}/lib"
+                  "${pkgs.stdenv.cc.cc.lib}/lib"
+                ]
+              );
+            };
+
             packages = [
+              pkgs.pkg-config
+              pkgs.openssl.dev
+
               (fenixSys.complete.withComponents [
                 "cargo"
                 "clippy"
@@ -34,4 +70,3 @@
         };
     };
 }
-
